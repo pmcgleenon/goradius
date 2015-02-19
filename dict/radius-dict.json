@@ -19,6 +19,11 @@
 		"Name":"NAS-Port",
 		"ContentType":"uvarint"
 	},
+    {
+        "Attribute":8,
+        "Name":"Framed-IP-Address",
+        "ContentType":"IP"
+    },
 	{
 		"Attribute":31,
 		"Name":"Calling-Station-Id",
@@ -29,6 +34,11 @@
 		"Name":"Acct-Status-Type",
 		"ContentType":"Acct-Status-Type"
 	},
+    {
+        "Attribute":44,
+        "Name":"Acct-Session-Id",
+        "ContentType":"Acct-Session-Id"
+    },
 	{
 		"Attribute":26,
 		"Name":"Vendor-Specific",

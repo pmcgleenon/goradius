@@ -49,6 +49,7 @@ type AttributeValuePair struct {
 	Type    string
 	Length  uint8
 	Content interface{}
+	AVPType uint8
 }
 
 func (p *RadiusPacket) String() string {
@@ -88,7 +89,7 @@ func (p *RadiusPacket) Marshal() []byte {
 
 	if len(p.AVPS) > 0 {
 		for _, avp := range p.AVPS {
-			if m, ok := marshalMap[avp.Name]; ok {
+			if m, ok := marshalMap[avp.Type]; ok {
 				avpBytes := m(avp, p)
 				avps.Write(avpBytes)
 			} else {

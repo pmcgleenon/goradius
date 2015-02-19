@@ -112,13 +112,18 @@ func NewGoRadius(radDictFile, vendorDictFile string, debug, verbose bool) *GoRad
 	}
 
 	marshalMap = map[string]MarshalHelper{
-		"string": StringMarshaller,
+		"string":         StringMarshaller,
+		"AcctStatusType": AcctStatusTypeMarshaller,
+		"IPAddress":      IPAddressMarshaller,
+
+		// TODO add some useful marshallers
 	}
 
 	// Load dictionaries
 
 	for _, attr := range radiusData {
 		radiusMap[attr.Attribute] = attr
+		// l.Debug("Adding to Radius Map %d %s %s)\n", attr.Attribute, attr.Name, attr.ContentType)
 	}
 
 	for _, vsa := range vendorData {
@@ -131,6 +136,23 @@ func NewGoRadius(radDictFile, vendorDictFile string, debug, verbose bool) *GoRad
 	}
 
 	return r
+}
+
+func (r *GoRadius) SendPacketToServer(p *RadiusPacket) error {
+	rawPacket := p.Marshal()
+
+	if r.conn != nil {
+		n, err := r.conn.Write(rawPacket)
+		if err != nil {
+			fmt.Errorf("Error writing to destination: %s\n", err.Error())
+		} else {
+			l.Debug("Wrote %d bytes \n", n)
+			return nil
+		}
+	}
+
+	l.Debug("Sent packet (Data len: %d)\n", len(rawPacket))
+	return nil
 }
 
 func (r *GoRadius) SendPacket(p *RadiusPacket) error {
@@ -165,6 +187,22 @@ func RegisterParser(name string, parser ContentParser) error {
 	}
 
 	parserMap[name] = parser
+
+	return nil
+}
+
+func (r *GoRadius) DialUDPServer(server string) error {
+	udpAddr, err := net.ResolveUDPAddr("udp", server)
+	if err != nil {
+		return fmt.Errorf("Unable to resolve UDP Address: %s\n", err.Error())
+	}
+
+	conn, err := net.DialUDP("udp", nil, udpAddr)
+	if err != nil {
+		return fmt.Errorf("Unable to resolve UDP Address: %s\n", err.Error())
+	}
+
+	r.conn = conn
 
 	return nil
 }
@@ -286,7 +324,7 @@ func (r *GoRadius) ParseRadiusPacket(source *net.UDPAddr, data []byte) *RadiusPa
 			parsedContent = parser(avpContent, p)
 		}
 
-		pairs = append(pairs, AttributeValuePair{name, ctype, avpLength, parsedContent})
+		pairs = append(pairs, AttributeValuePair{name, ctype, avpLength, parsedContent, avpType})
 
 	}
 
