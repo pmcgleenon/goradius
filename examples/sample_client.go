@@ -16,7 +16,7 @@ func main() {
 		return
 	}
 
-	err := r.DialUDPServer("10.20.51.12:1813")
+	err := r.DialUDPServer("127.0.0.1:1813")
 
 	if err != nil {
 		fmt.Printf("Unable to create UDP socket : %s\n", err.Error())

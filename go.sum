@@ -1,0 +1,4 @@
+github.com/alouca/goconfig v0.0.0-20120904115001-cae83e2b5611 h1:ROXIP46lMrZFBxxUInGSDNjChdFbYlhzAzbT8WmqWWM=
+github.com/alouca/goconfig v0.0.0-20120904115001-cae83e2b5611/go.mod h1:XpW+6Q1sY48UimQz3P0XjD1K+hxBYQf2+9G8iyEgFss=
+github.com/alouca/gologger v0.0.0-20120904114645-7d4b7291de9c h1:k/7/05/5kPRX7HaKyVYlsGVX6XkFTyYLqkqHzceUVlU=
+github.com/alouca/gologger v0.0.0-20120904114645-7d4b7291de9c/go.mod h1:SI1d/2/wpSTDjHgdS9ZLy6hqvsdhzVYAc8RLztweMpA=

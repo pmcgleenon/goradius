@@ -39,12 +39,14 @@ func TestUDPServer(t *testing.T) {
 				r.SendPacket(resp)
 			}
 			return
-		case p := acct:
+		case p := <-acct:
 			t.Logf("Got Acct packet: %s\n", p.String())
 			for _, avp := range p.AVPS {
 				t.Logf("Received AVP %s %s %+v\n", avp.Name, avp.Type, avp.Content)
 			}
 
+		default:
+			t.Logf("No activity\n")
 		}
 	}
 }

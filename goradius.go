@@ -103,6 +103,7 @@ func NewGoRadius(radDictFile, vendorDictFile string, debug, verbose bool) *GoRad
 		"VSA":              VendorParser,
 		"IP":               IPParser,
 		"Acct-Status-Type": AcctStatusTypeParser,
+		"Acct-Session-Id":  ParseString,
 		"uint16":           ParseUint16,
 		"uint32":           ParseUint32,
 		"string":           ParseString,
@@ -310,11 +311,14 @@ func (r *GoRadius) ParseRadiusPacket(source *net.UDPAddr, data []byte) *RadiusPa
 
 		if avp, ok := radiusMap[int(avpType)]; ok {
 			// Parse the content
-			parser := parserMap[avp.ContentType]
-			l.Debug("Type: %s(%d), Length: %d, Content-Type: %s\n", avp.Name, avpType, avpLength, avp.ContentType)
-			parsedContent = parser(avpContent, p)
-			name = avp.Name
-			ctype = avp.ContentType
+			if parser, ok := parserMap[avp.ContentType]; ok {
+				l.Debug("Type: %s(%d), Length: %d, Content-Type: %s\n", avp.Name, avpType, avpLength, avp.ContentType)
+				parsedContent = parser(avpContent, p)
+				name = avp.Name
+				ctype = avp.ContentType
+			} else {
+				l.Debug("Didn't find parser for Content-Type:%s Type: %s(%d), Length: %d\n", avp.ContentType, avp.Name, avpType, avpLength)
+			}
 
 		} else {
 			l.Debug("Unknown Type %d, Length %d\n", avpType, avpLength)

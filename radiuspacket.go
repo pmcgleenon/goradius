@@ -93,7 +93,7 @@ func (p *RadiusPacket) Marshal() []byte {
 				avpBytes := m(avp, p)
 				avps.Write(avpBytes)
 			} else {
-				l.Debug("No Marshaller found for AVP %s (%d)\n", avp.Name, avp.Type)
+				l.Debug("No Marshaller found for AVP %s (%s)\n", avp.Name, avp.Type)
 			}
 		}
 	}
